@@ -21,7 +21,7 @@ class ProducerThread(threading.Thread):
 class ConsumerThread(threading.Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs=None, verbose=None):
-        super(ConsumerThread,self).__init__()
+        super().__init__(ConsumerThread,self)
         self.target = target
         self.name = name
         return

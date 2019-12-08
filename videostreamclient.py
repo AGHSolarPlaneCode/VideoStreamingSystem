@@ -1,6 +1,5 @@
 import argparse
 
-
 def arg_parse_creator():
     parser = argparse.ArgumentParser(description='UDPVideoStreaming')
 
@@ -27,6 +26,7 @@ def runCamera():
     print('ADDRESS: {}'.format(flags.ipaddr))
     print('PORT: {}'.format(flags.port))
     print('REPEAT: {}'.format(flags.repeat))
+
 
 if __name__ == '__main__':
     runCamera()

@@ -18,26 +18,28 @@ class UDPVideoTransmitter:
         self.ipaddress = ip
         self.port = port
         self.repeat = repeat
+        self.payload = 1000
         # socket init
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         #self.socket.bind((ip, port))  # uncomment with appropriate address
 
     def datagram_creator(self, rdata):
         print('Prepare datagram list ( > MTU) ')
-        PACKET_LENGTH = self.payload
-        PACKET_REPEAT = 2 if self.repeat else 1
+        packet_length = self.payload
+        packet_repeat = 2 if self.repeat else 1
         datagrams = list()
-        msg = bytes(data)
-        for n in range(0, PACKET_REPEAT):
-            for i in range(0, int(len(msg) / PACKET_LENGTH) + 1):
-                if PACKET_LENGTH * i + PACKET_LENGTH > len(msg):
-                    if len(msg) != i * PACKET_LENGTH:
-                        datagrams.append(int.to_bytes(i * PACKET_LENGTH, 4, 'big') + msg[i * PACKET_LENGTH:len(msg)])
+        msg = bytes(rdata)
+        for n in range(0, packet_repeat):
+            for i in range(0, int(len(msg) / packet_length) + 1):
+                if packet_length * i + packet_length > len(msg):
+                    if len(msg) != i * packet_length:
+                        datagrams.append(int.to_bytes(i * packet_length, 4, 'big') + msg[i * packet_length:len(msg)])
                 else:
-                    datagrams.append(int.to_bytes(i * PACKET_LENGTH, 4, 'big') + msg[i * PACKET_LENGTH:PACKET_LENGTH * i + PACKET_LENGTH])
+                    datagrams.append(int.to_bytes(i * packet_length, 4, 'big') + msg[i * packet_length:packet_length* i + packet_length])
 
         return datagrams
 
     def send_data(self, datagrams):
         for datagram in datagrams:
             print(datagram)
+            

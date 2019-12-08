@@ -24,6 +24,20 @@ class UDPVideoTransmitter:
 
     def datagram_creator(self, rdata):
         print('Prepare datagram list ( > MTU) ')
+        PACKET_LENGTH = self.payload
+        PACKET_REPEAT = 2 if self.repeat else 1
+        datagrams = list()
+        msg = bytes(data)
+        for n in range(0, PACKET_REPEAT):
+            for i in range(0, int(len(msg) / PACKET_LENGTH) + 1):
+                if PACKET_LENGTH * i + PACKET_LENGTH > len(msg):
+                    if len(msg) != i * PACKET_LENGTH:
+                        datagrams.append(int.to_bytes(i * PACKET_LENGTH, 4, 'big') + msg[i * PACKET_LENGTH:len(msg)])
+                else:
+                    datagrams.append(int.to_bytes(i * PACKET_LENGTH, 4, 'big') + msg[i * PACKET_LENGTH:PACKET_LENGTH * i + PACKET_LENGTH])
+
+        return datagrams
 
     def send_data(self, datagrams):
-        print('Send data to server')
+        for datagram in datagrams:
+            print(datagram)

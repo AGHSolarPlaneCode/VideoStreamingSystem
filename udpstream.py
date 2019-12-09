@@ -8,7 +8,7 @@ class VideoController:
         self.running = False
 
     def write(self, s):
-        print('Get frame')
+        self.transmitter.send_data(self.transmitter.datagram_creator(s))
 
     def set_transmision_method(self, sender):
         self.transmitter = sender
@@ -21,7 +21,6 @@ class UDPVideoTransmitter:
         self.payload = 1000
         # socket init
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        #self.socket.bind((ip, port))  # uncomment with appropriate address
 
     def datagram_creator(self, rdata):
 
@@ -36,11 +35,9 @@ class UDPVideoTransmitter:
                         datagrams.append(int.to_bytes(i * packet_length, 4, 'big') + msg[i * packet_length:len(msg)])
                 else:
                     datagrams.append(int.to_bytes(i * packet_length, 4, 'big') + msg[i * packet_length:packet_length* i + packet_length])
-
         return datagrams
 
     def send_data(self, datagrams):
 
         for datagram in datagrams:
-            self.socket.sendto(datagram, self.ipaddress)
-
+            self.socket.sendto(datagram, (self.ipaddress, self.port))

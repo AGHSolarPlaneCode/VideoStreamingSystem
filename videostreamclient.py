@@ -1,4 +1,6 @@
 import argparse
+import udpstream as udps
+from setup import *
 
 def arg_parse_creator():
     parser = argparse.ArgumentParser(description='UDPVideoStreaming')
@@ -21,11 +23,35 @@ def arg_parse_creator():
 
 def runCamera():
 
+    print('UDP VIDEO STREAM')
+    # print('ADDRESS: {}'.format(flags.ipaddr))
+    # print('PORT: {}'.format(flags.port))
+    # print('REPEAT: {}'.format(flags.repeat))
+
     flags = arg_parse_creator()
 
-    print('ADDRESS: {}'.format(flags.ipaddr))
-    print('PORT: {}'.format(flags.port))
-    print('REPEAT: {}'.format(flags.repeat))
+    udp_transmition = udps.UDPVideoTransmitter(ip=flags.ipaddr,
+                                               port=flags.port,
+                                               repeat=flags.repeat)
+
+    vid_controller = udps.VideoController()
+
+    vid_controller.set_transmision_method(udp_transmition)
+
+    # with picamera.PiCamera() as camera:
+    #     camera.resolution = (RES_WIDTH, RES_HEIGHT)
+    #     camera.framerate = FRAME_RATE
+    #
+    #
+    #     try:
+    #         camera.start_recording(vid_controller,
+    #                                format=CODEC_FORM)
+    #
+    #     except:
+    #
+    #     finally:
+    #         camera.stop_recording()
+    #
 
 
 if __name__ == '__main__':

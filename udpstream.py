@@ -24,7 +24,7 @@ class UDPVideoTransmitter:
         #self.socket.bind((ip, port))  # uncomment with appropriate address
 
     def datagram_creator(self, rdata):
-        print('Prepare datagram list ( > MTU) ')
+
         packet_length = self.payload
         packet_repeat = 2 if self.repeat else 1
         datagrams = list()
@@ -40,6 +40,7 @@ class UDPVideoTransmitter:
         return datagrams
 
     def send_data(self, datagrams):
+
         for datagram in datagrams:
-            print(datagram)
-            
+            self.socket.sendto(datagram, self.ipaddress)
+

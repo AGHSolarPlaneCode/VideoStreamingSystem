@@ -1,7 +1,7 @@
 import socket
 import sys
 
-ADDRESS = ('localhost', 8889)
+ADDRESS = ('localhost', 8880)
 
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

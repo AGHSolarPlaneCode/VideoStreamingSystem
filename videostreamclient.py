@@ -1,5 +1,7 @@
 import argparse
 import udpstream as udps
+import time
+
 from setup import *
 
 def arg_parse_creator():
@@ -38,21 +40,18 @@ def runCamera():
 
     vid_controller.set_transmision_method(udp_transmition)
 
-    # with picamera.PiCamera() as camera:
-    #     camera.resolution = (RES_WIDTH, RES_HEIGHT)
-    #     camera.framerate = FRAME_RATE
-    #
-    #
-    #     try:
-    #         camera.start_recording(vid_controller,
-    #                                format=CODEC_FORM)
-    #
-    #     except:
-    #
-    #     finally:
-    #         camera.stop_recording()
-    #
+    with picamera.PiCamera() as camera:
+        camera.resolution = (RES_WIDTH, RES_HEIGHT)
+        camera.framerate = FRAME_RATE
 
+        try:
+            camera.start_preview()
+            time.sleep(2)
+            camera.start_recording(vid_controller,
+                                       format=CODEC_FORM)
+
+        finally:
+            camera.stop_recording()
 
 if __name__ == '__main__':
     runCamera()

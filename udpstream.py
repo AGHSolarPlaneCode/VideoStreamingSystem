@@ -10,7 +10,6 @@ class VideoController:
         self.transmitter.video_send_data(datagrams)
         self.frame_id += 1
 
-
     def set_transmision_method(self, sender):
         self.transmitter = sender
 
@@ -50,3 +49,6 @@ class UDPVideoTransmitter:
         for datagram in datagrams:
             for n in range(0, packet_repeat):
                 self.socket.sendto(datagram, self.dest_address)
+
+    def __del__(self):
+        self.socket.close()

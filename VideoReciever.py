@@ -31,10 +31,18 @@ while True:
 
     if int.from_bytes(d[0:4], 'big') >= actual_frame + 2:
         if actual_frame % 2 == 1:
-            sendSocket.sendto(frame_high, ('localhost', 7787))
+            for i in range(0, int(len(frame_high)/1024)):
+                if len(frame_high) >= i*1024:
+                    sendSocket.sendto(frame_high[1024*i:1024*i+1024], ('localhost', 7787))
+                else:
+                    sendSocket.sendto(frame_high[1024*i:len(frame_high)], ('localhost',7787))
             frame_high.clear()
         elif actual_frame % 2 == 0:
-            sendSocket.sendto(frame_low, ('localhost', 7787))
+            for i in range(0, int(len(frame_low)/1024)):
+                if len(frame_low) >= i*1024:
+                    sendSocket.sendto(frame_low[1024*i:1024*i+1024], ('localhost', 7787))
+                else:
+                    sendSocket.sendto(frame_low[1024*i:len(frame_low)], ('localhost', 7787))
             frame_low.clear()
         actual_frame += 1
 

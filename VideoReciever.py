@@ -29,23 +29,17 @@ actual_frame: int = 0
 while True:
     d, address = s.recvfrom(1016)
 
-    if int.from_bytes(d[0:4], 'big') >= actual_frame + 2:
-        if actual_frame % 2 == 1:
-            for i in range(0, int(len(frame_high)/1024)):
-                if len(frame_high) >= i*1024:
-                    sendSocket.sendto(frame_high[1024*i:1024*i+1024], ('localhost', 7787))
-                else:
-                    sendSocket.sendto(frame_high[1024*i:len(frame_high)], ('localhost',7787))
-            frame_high.clear()
-        elif actual_frame % 2 == 0:
-            for i in range(0, int(len(frame_low)/1024)):
-                if len(frame_low) >= i*1024:
-                    sendSocket.sendto(frame_low[1024*i:1024*i+1024], ('localhost', 7787))
-                else:
-                    sendSocket.sendto(frame_low[1024*i:len(frame_low)], ('localhost', 7787))
-            frame_low.clear()
-        actual_frame += 1
 
+    if int.from_bytes(d[0:4], 'big') >= actual_frame + 2:
+        if actual_frame % 2 == 0:
+            print("Frame_low is rdy")
+            #inject frame_low to pipeline here
+            frame_low.clear()
+        if actual_frame % 2 == 1:
+            print("Frame_high is rdy")
+            #inject frame_high to pipeline here
+            frame_high.clear()
+        actual_frame = int.from_bytes(d[0:4], 'big') - 1
     if actual_frame % 2 == 1:
         if actual_frame == int.from_bytes(d[0:4], "big"):
             frame_high[int.from_bytes(d[4:8], 'big') : int.from_bytes(d[4:8], 'big') + int.from_bytes(d[8:12], 'big')] = d[16:1016]
@@ -56,4 +50,3 @@ while True:
             frame_low[int.from_bytes(d[4:8], 'big') : int.from_bytes(d[4:8], 'big') + int.from_bytes(d[8:12], 'big')] = d[16:1016]
         elif int.from_bytes(d[0:4], "big") > actual_frame:
             frame_high[int.from_bytes(d[4:8], 'big'): int.from_bytes(d[4:8], 'big') + int.from_bytes(d[8:12], 'big')] = d[16:1016]
-
